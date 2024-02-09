@@ -1,5 +1,6 @@
 package com.dataspin.oboiservice.controller;
 
+import com.dataspin.oboiservice.entity.SortDateModel;
 import com.dataspin.oboiservice.model.IncomeOutcomeModel;
 import com.dataspin.oboiservice.model.NameModel;
 import com.dataspin.oboiservice.service.WarehouseService;
@@ -35,5 +36,10 @@ public class IncomeController {
     @GetMapping("/types")
     public ResponseEntity<Object> types(HttpServletRequest request) {
         return warehouseService.incomeTypes(request);
+    }
+
+    @GetMapping("/sort-by-date")
+    public ResponseEntity<Object> sortByDate(@RequestBody SortDateModel model, HttpServletRequest request) {
+        return warehouseService.sortByDateIncomeOutcome(model, request, this);
     }
 }

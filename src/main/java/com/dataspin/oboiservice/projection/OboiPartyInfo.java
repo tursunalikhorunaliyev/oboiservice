@@ -1,6 +1,6 @@
 package com.dataspin.oboiservice.projection;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * Projection for {@link com.dataspin.oboiservice.entity.OboiParty}
@@ -10,5 +10,5 @@ public interface OboiPartyInfo {
 
     String getName();
 
-    Timestamp getTimestamp();
+    LocalDateTime getTimestamp();
 }

@@ -14,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -67,7 +69,6 @@ public class WarehouseService {
             return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
         }
 
-
         OboiCode oboiCodeFound = oboiCodeRepository.findByName(model.code).orElse(null);
         if (oboiCodeFound == null) {
             final OboiCode oboiCode = new OboiCode();
@@ -117,6 +118,36 @@ public class WarehouseService {
         }
         if (controller instanceof OutcomeController) {
             return new ResponseEntity<>(outcomeRepository.getAllOutcome(), HttpStatus.OK);
+        }
+        return null;
+    }
+
+    public ResponseEntity<Object> sortByDateIncomeOutcome(SortDateModel model, HttpServletRequest request, Object controller) {
+        final User user = authService.parseRequest(request);
+        if (!authService.checkUserIsLogged(user)) {
+            final Map<String, Object> map = new HashMap<>();
+            map.put("details", "Login failed");
+            return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
+        }
+
+        final Timestamp startTimestamp;
+        final Timestamp endTimestamp;
+        try {
+            final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+            startTimestamp = new Timestamp(dateFormat.parse(model.start).getTime());
+            endTimestamp = new Timestamp(dateFormat.parse(model.end).getTime());
+        } catch (Exception e) {
+            final Map<String, Object> map = new HashMap<>();
+            map.put("details", "DateTime format invalid. Valid format - 'yyyy-MM-dd hh:mm'");
+            return new ResponseEntity<>(map, HttpStatus.BAD_REQUEST);
+        }
+        System.out.println(model.start);
+        System.out.println(startTimestamp);
+        if (controller instanceof IncomeController) {
+            return new ResponseEntity<>(incomeRepository.findByTimestampBetween(startTimestamp, endTimestamp), HttpStatus.OK);
+        }
+        if (controller instanceof OutcomeController) {
+            return new ResponseEntity<>(outcomeRepository.findByTimestampBetween(startTimestamp, endTimestamp), HttpStatus.OK);
         }
         return null;
     }

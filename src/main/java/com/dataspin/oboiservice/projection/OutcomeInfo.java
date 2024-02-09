@@ -2,7 +2,7 @@ package com.dataspin.oboiservice.projection;
 
 import com.dataspin.oboiservice.entity.OutcomeType;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 /**
  * Projection for {@link com.dataspin.oboiservice.entity.Outcome}
@@ -12,7 +12,7 @@ public interface OutcomeInfo {
 
     Integer getQuantity();
 
-    Timestamp getTimestamp();
+    LocalDateTime getTimestamp();
 
     String getRegNo();
 
