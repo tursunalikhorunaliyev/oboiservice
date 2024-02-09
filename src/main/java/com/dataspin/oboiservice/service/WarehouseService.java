@@ -5,6 +5,7 @@ import com.dataspin.oboiservice.controller.OutcomeController;
 import com.dataspin.oboiservice.entity.*;
 import com.dataspin.oboiservice.model.CodeIdAndPartyIdModel;
 import com.dataspin.oboiservice.model.IncomeOutcomeModel;
+import com.dataspin.oboiservice.model.NameModel;
 import com.dataspin.oboiservice.model.WarehouseModel;
 import com.dataspin.oboiservice.repository.*;
 import lombok.AllArgsConstructor;
@@ -204,6 +205,40 @@ public class WarehouseService {
             return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
         }
         return new ResponseEntity<>(outcomeTypeRepository.findAll(), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> incomeTypesAdd(NameModel model, HttpServletRequest request) {
+        final User user = authService.parseRequest(request);
+        if (!authService.checkUserIsLogged(user)) {
+            final Map<String, Object> map = new HashMap<>();
+            map.put("details", "Login failed");
+            return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
+        }
+
+        final IncomeType incomeType = new IncomeType();
+        incomeType.setName(model.name);
+
+        incomeTypeRepository.save(incomeType);
+        final Map<String, Object> map = new HashMap<>();
+        map.put("details", "Successfully created");
+        return new ResponseEntity<>(map, HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> outcomeTypesAdd(NameModel model, HttpServletRequest request) {
+        final User user = authService.parseRequest(request);
+        if (!authService.checkUserIsLogged(user)) {
+            final Map<String, Object> map = new HashMap<>();
+            map.put("details", "Login failed");
+            return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
+        }
+
+        final OutcomeType outcomeType = new OutcomeType();
+        outcomeType.setName(model.name);
+
+        outcomeTypeRepository.save(outcomeType);
+        final Map<String, Object> map = new HashMap<>();
+        map.put("details", "Successfully created");
+        return new ResponseEntity<>(map, HttpStatus.OK);
     }
 
     private String regSet() {
